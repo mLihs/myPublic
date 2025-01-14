@@ -7,6 +7,9 @@ const PRIVATE_REPO = "git@github.com:mlihs/myprivate.git";
 const CLONE_DIR = path.join(__dirname, "../private-assets");
 const TARGET_DIR = path.join(__dirname, "../assets");
 
+console.log("✅ postinstall-Skript läuft...");
+
+
 if (API_KEY) {
     console.log("🔒 API-Key gefunden! Lade geschützte Markenelemente aus privatem Repository...");
 
