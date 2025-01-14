@@ -2,15 +2,14 @@ const { exec } = require('child_process');
 const fs = require('fs');
 const path = require('path');
 
-const API_KEY = process.env.MY_PACKAGE_API_KEY;
-const GIT_TOKEN = process.env.GIT_TOKEN; // PAT aus Umgebungsvariable
-const GIT_USER = "mein-git-user"; // Dein GitHub/GitLab-Username
-const PRIVATE_REPO = `https://${GIT_USER}:${GIT_TOKEN}@github.com/mein-unternehmen/my-package-private.git`; // Private Repo URL
+const GIT_TOKEN = process.env.GIT_TOKEN;  // Personal Access Token (PAT)
+const GIT_USER = "mlihs";  // Dein GitHub/GitLab-Username
+const PRIVATE_REPO = `https://${GIT_USER}:${GIT_TOKEN}@github.com/mein-unternehmen/my-package-private.git`;  // Private Repo URL
 const CLONE_DIR = path.join(__dirname, "../private-assets");
 const TARGET_DIR = path.join(__dirname, "../assets");
 
-if (API_KEY && GIT_TOKEN) {
-    console.log("🔒 API-Key & GitHub/GitLab Token gefunden! Lade geschützte Markenelemente...");
+if (GIT_TOKEN) {
+    console.log("🔒 GitHub/GitLab Token gefunden! Lade geschützte Markenelemente...");
 
     exec(`git clone --depth 1 ${PRIVATE_REPO} ${CLONE_DIR}`, (error, stdout, stderr) => {
         if (error) {
@@ -33,5 +32,5 @@ if (API_KEY && GIT_TOKEN) {
         });
     });
 } else {
-    console.log("⚠ Kein gültiger API-Key oder Git-Token angegeben. Standardversion bleibt erhalten.");
+    console.log("⚠ Kein Git-Token angegeben. Standardversion bleibt erhalten.");
 }
