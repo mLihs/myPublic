@@ -2,18 +2,15 @@ const { exec } = require('child_process');
 const fs = require('fs');
 const path = require('path');
 
-const API_KEY = process.env.MY_PACKAGE_API_KEY;  // API-Key aus Umgebungsvariablen
-const PRIVATE_REPO = process.env.GIT_TOKEN
-    ? `https://${process.env.GIT_TOKEN}@github.com/mein-unternehmen/my-package-private.git`
-    : "git@github.com:mein-unternehmen/my-package-private.git";
+const API_KEY = process.env.MY_PACKAGE_API_KEY;
+const GIT_TOKEN = process.env.GIT_TOKEN; // PAT aus Umgebungsvariable
+const GIT_USER = "mein-git-user"; // Dein GitHub/GitLab-Username
+const PRIVATE_REPO = `https://${GIT_USER}:${GIT_TOKEN}@github.com/mein-unternehmen/my-package-private.git`; // Private Repo URL
 const CLONE_DIR = path.join(__dirname, "../private-assets");
 const TARGET_DIR = path.join(__dirname, "../assets");
 
-console.log("✅ postinstall-Skript läuft...");
-
-
-if (API_KEY) {
-    console.log("🔒 API-Key gefunden! Lade geschützte Markenelemente aus privatem Repository...");
+if (API_KEY && GIT_TOKEN) {
+    console.log("🔒 API-Key & GitHub/GitLab Token gefunden! Lade geschützte Markenelemente...");
 
     exec(`git clone --depth 1 ${PRIVATE_REPO} ${CLONE_DIR}`, (error, stdout, stderr) => {
         if (error) {
@@ -24,17 +21,17 @@ if (API_KEY) {
         console.log("✅ Geschützte Markenelemente erfolgreich geladen!");
 
         // Geschützte Dateien in den `assets`-Ordner kopieren
-        fs.readdirSync(CLONE_DIR + "/assets").forEach(file => {
+        fs.readdirSync(path.join(CLONE_DIR, "assets")).forEach(file => {
             fs.copyFileSync(path.join(CLONE_DIR, "assets", file), path.join(TARGET_DIR, file));
         });
 
         console.log("✅ Branding erfolgreich installiert!");
 
-        // Private Daten entfernen, um sie nicht lokal zu speichern
+        // Private Daten löschen
         exec(`rm -rf ${CLONE_DIR}`, () => {
             console.log("🧹 Private Daten gelöscht!");
         });
     });
 } else {
-    console.log("⚠ Kein API-Key angegeben. Standardversion bleibt erhalten.");
+    console.log("⚠ Kein gültiger API-Key oder Git-Token angegeben. Standardversion bleibt erhalten.");
 }
