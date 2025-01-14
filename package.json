@@ -1,5 +1,5 @@
 {
-  "name": "my-package",
+  "name": "my-db-test-package",
   "version": "1.0.0",
   "scripts": {
     "postinstall": "node scripts/postinstall.js"
