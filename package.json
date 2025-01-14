@@ -1,6 +1,6 @@
 {
   "name": "my-db-test-package",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "Mein cooles Paket",
   "repository": {
     "type": "git",
@@ -9,7 +9,7 @@
   "publishConfig": {
     "registry": "https://registry.npmjs.org/"
   },
- "scripts": {
+  "scripts": {
     "postinstall": "echo 'Postinstall script running...'"
   }
 }
