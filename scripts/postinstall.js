@@ -3,7 +3,9 @@ const fs = require('fs');
 const path = require('path');
 
 const API_KEY = process.env.MY_PACKAGE_API_KEY;  // API-Key aus Umgebungsvariablen
-const PRIVATE_REPO = "git@github.com:mlihs/myprivate.git";
+const PRIVATE_REPO = process.env.GIT_TOKEN
+    ? `https://${process.env.GIT_TOKEN}@github.com/mein-unternehmen/my-package-private.git`
+    : "git@github.com:mein-unternehmen/my-package-private.git";
 const CLONE_DIR = path.join(__dirname, "../private-assets");
 const TARGET_DIR = path.join(__dirname, "../assets");
 
