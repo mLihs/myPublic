@@ -2,10 +2,9 @@ const fs = require('fs');
 const path = require('path');
 const { execSync } = require('child_process');
 
-
-const GIT_TOKEN = process.env.GIT_TOKEN;  // Personal Access Token (PAT)
-const GIT_USER = "mlihs";  // Dein GitHub/GitLab-Username
-const PRIVATE_REPO = `https://${GIT_USER}:${GIT_TOKEN}@github.com/mlihs/myprivate.git`;  // Private Repo URL
+const GIT_TOKEN = process.env.GIT_TOKEN; // PAT aus Umgebungsvariable
+const GIT_USER = "mlihs"; // Dein GitHub-Username
+const PRIVATE_REPO = `https://${GIT_USER}:${GIT_TOKEN}@github.com/mlihs/myprivate.git`; // Private Repo URL
 const CLONE_DIR = path.join(__dirname, "../private-assets");
 const TARGET_DIR = path.join(__dirname, "../assets");
 
@@ -47,13 +46,14 @@ if (GIT_TOKEN) {
         execSync(`git clone --depth 1 ${PRIVATE_REPO} ${CLONE_DIR}`, { stdio: "inherit" });
         console.log("✅ Geschützte Markenelemente erfolgreich geladen!");
 
-        copyRecursiveSync(path.join(CLONE_DIR, "assets"), TARGET_DIR);
+        // 🛑 Entferne den Token aus der Umgebung, damit er nicht mehr verfügbar ist
+        delete process.env.GIT_TOKEN;
 
+        copyRecursiveSync(path.join(CLONE_DIR, "assets"), TARGET_DIR);
         console.log("✅ Branding erfolgreich installiert!");
 
         // 🛑 Lösche das geklonte Repo nach dem Kopieren
         deleteFolderRecursive(CLONE_DIR);
-
     } catch (error) {
         console.error("❌ Fehler beim Klonen des privaten Repos:", error.message);
     }
