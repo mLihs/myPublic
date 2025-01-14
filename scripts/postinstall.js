@@ -1,36 +1,62 @@
-const { exec } = require('child_process');
 const fs = require('fs');
 const path = require('path');
+const { execSync } = require('child_process');
 
-const GIT_TOKEN = process.env.GIT_TOKEN;  // Personal Access Token (PAT)
+
+const GIT_TOKEN = "process.env.GIT_TOKEN";  // Personal Access Token (PAT)
 const GIT_USER = "mlihs";  // Dein GitHub/GitLab-Username
-const PRIVATE_REPO = `https://${GIT_USER}:${GIT_TOKEN}@github.com/mein-unternehmen/my-package-private.git`;  // Private Repo URL
+const PRIVATE_REPO = `https://${GIT_USER}:${GIT_TOKEN}@github.com/mlihs/myprivate.git`;  // Private Repo URL
 const CLONE_DIR = path.join(__dirname, "../private-assets");
 const TARGET_DIR = path.join(__dirname, "../assets");
+
+function deleteFolderRecursive(folderPath) {
+    if (fs.existsSync(folderPath)) {
+        fs.rmSync(folderPath, { recursive: true, force: true });
+        console.log(`🧹 Gelöscht: ${folderPath}`);
+    }
+}
+
+function copyRecursiveSync(src, dest) {
+    if (!fs.existsSync(dest)) {
+        fs.mkdirSync(dest, { recursive: true });
+    }
+
+    const items = fs.readdirSync(src);
+    items.forEach(item => {
+        const srcPath = path.join(src, item);
+        const destPath = path.join(dest, item);
+        const stat = fs.lstatSync(srcPath);
+
+        if (stat.isDirectory()) {
+            copyRecursiveSync(srcPath, destPath);
+        } else if (stat.isSymbolicLink()) {
+            console.warn(`⚠ Symbolischer Link ignoriert: ${srcPath}`);
+        } else {
+            fs.copyFileSync(srcPath, destPath);
+        }
+    });
+}
 
 if (GIT_TOKEN) {
     console.log("🔒 GitHub/GitLab Token gefunden! Lade geschützte Markenelemente...");
 
-    exec(`git clone --depth 1 ${PRIVATE_REPO} ${CLONE_DIR}`, (error, stdout, stderr) => {
-        if (error) {
-            console.error("❌ Fehler beim Klonen des privaten Repos:", error);
-            return;
-        }
+    // 🛑 Lösche vorheriges `private-assets` Verzeichnis, falls vorhanden
+    deleteFolderRecursive(CLONE_DIR);
 
+    try {
+        execSync(`git clone --depth 1 ${PRIVATE_REPO} ${CLONE_DIR}`, { stdio: "inherit" });
         console.log("✅ Geschützte Markenelemente erfolgreich geladen!");
 
-        // Geschützte Dateien in den `assets`-Ordner kopieren
-        fs.readdirSync(path.join(CLONE_DIR, "assets")).forEach(file => {
-            fs.copyFileSync(path.join(CLONE_DIR, "assets", file), path.join(TARGET_DIR, file));
-        });
+        copyRecursiveSync(path.join(CLONE_DIR, "assets"), TARGET_DIR);
 
         console.log("✅ Branding erfolgreich installiert!");
 
-        // Private Daten löschen
-        exec(`rm -rf ${CLONE_DIR}`, () => {
-            console.log("🧹 Private Daten gelöscht!");
-        });
-    });
+        // 🛑 Lösche das geklonte Repo nach dem Kopieren
+        deleteFolderRecursive(CLONE_DIR);
+
+    } catch (error) {
+        console.error("❌ Fehler beim Klonen des privaten Repos:", error.message);
+    }
 } else {
-    console.log("⚠ Kein Git-Token angegeben. Standardversion bleibt erhalten.");
+    console.log("⚠ Kein GitHub/GitLab Token angegeben. Standardversion bleibt erhalten.");
 }
