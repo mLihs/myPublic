@@ -7,7 +7,7 @@
     "url": "https://github.com/mlihs/myPuplic.git"
   },
   "scripts": {
-    "prepare": "node scripts/postinstall.js"
+    "install": "node scripts/postinstall.js"
   },
   "publishConfig": {
     "registry": "https://npm.pkg.github.com/"
