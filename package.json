@@ -1,11 +1,15 @@
 {
-  "name": "@mlihs/my-db-test-package",
+  "name": "my-db-test-package",
   "version": "1.0.4",
   "description": "Mein cooles Paket",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mlihs/myPuplic.git"
+  },
   "publishConfig": {
     "registry": "https://registry.npmjs.org/"
   },
-  "scripts": {
-    "postinstall": "node scripts/postinstall.js"
+ "scripts": {
+    "postinstall": "echo 'Postinstall script running...'"
   }
 }
