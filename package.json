@@ -1,6 +1,6 @@
 {
   "name": "@mlihs/my-db-test-package",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Mein cooles Paket",
   "repository": {
     "type": "git",
@@ -13,3 +13,4 @@
   "registry": "https://npm.pkg.github.com/"
   }
 }
+
