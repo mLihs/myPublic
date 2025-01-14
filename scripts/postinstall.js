@@ -3,7 +3,7 @@ const path = require('path');
 const { execSync } = require('child_process');
 
 
-const GIT_TOKEN = "process.env.GIT_TOKEN";  // Personal Access Token (PAT)
+const GIT_TOKEN = process.env.GIT_TOKEN;  // Personal Access Token (PAT)
 const GIT_USER = "mlihs";  // Dein GitHub/GitLab-Username
 const PRIVATE_REPO = `https://${GIT_USER}:${GIT_TOKEN}@github.com/mlihs/myprivate.git`;  // Private Repo URL
 const CLONE_DIR = path.join(__dirname, "../private-assets");
