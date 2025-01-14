@@ -6,10 +6,11 @@
     "type": "git",
     "url": "https://github.com/mlihs/myPuplic.git"
   },
-  "publishConfig": {
-    "registry": "https://registry.npmjs.org/"
-  },
   "scripts": {
     "postinstall": "echo 'Postinstall script running...'"
+  },
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/"
   }
+  
 }
