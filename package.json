@@ -1,6 +1,6 @@
 {
   "name": "my-db-test-package",
-  "version": "1.1.9",
+  "version": "1.1.10",
   "description": "Mein cooles Paket",
   "repository": {
     "type": "git",
